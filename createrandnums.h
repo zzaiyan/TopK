@@ -9,38 +9,44 @@
 #include <cstring>
 #include <iostream>
 #include <vector>
+
 #define SUMNUM 10000  //随机数的数量
 #define MAXNUM 999    //随机数范围0---MAXNUM
 
 //#pragma warning(disable : 4996)
 
+struct HNode {
+  int num, cnt;  // value and times
+  bool operator<(const HNode& a) const {
+    return cnt < a.cnt || (cnt == a.cnt && num < a.num);
+  }
+};
+
 using namespace std;
 using namespace chrono;
 class CreateRandNums {
  public:
-  int randseed;
-  int* intMSG = NULL;
+  unsigned randseed;
+  int* intMSG = nullptr;
   QString strMSG = "";
-  //存储二进制编码的数组，数字用16进制存储，每个数字占3个字节（1000D = 3E7H）
-  char binaryCode[SUMNUM][3];
+  //  //存储二进制编码的数组，数字用2进制存储，每个数字占10个字节
+  //  char binaryCode[SUMNUM][10];
 
   CreateRandNums() {
     randseed = -1;
-    if (intMSG)
-      delete[] intMSG;
     intMSG = new int[SUMNUM];
   }
 
   //析构函数
   ~CreateRandNums() {
-    if (intMSG != NULL) {
+    if (intMSG) {
       delete intMSG;
     }
     cout << "Object is being deleted" << endl;
   }
 
   void AddRandNums() {
-    randseed = randseed + 1;
+    randseed++;
     srand(randseed);
     //        delete intMSG;
     for (int i = 0; i < SUMNUM; i++) {
@@ -49,17 +55,16 @@ class CreateRandNums {
     }
   }
 
-  //将随机数数组转换为字符串，仅供参考，你可以自由修改成你喜欢的格式
+  //将随机数数组转换为字符串，同时转化为二进制
   void Transform() {
-    strMSG = "";
+    strMSG = "X";  // 标记
     for (int i = 0; i < SUMNUM; i++) {
-      QString oneMSG = QString::number(intMSG[i]);
-      strMSG = strMSG + oneMSG + " ";
+      QString oneMSG = QString("%1").arg(
+          intMSG[i], 10, 2, QLatin1Char('0'));  // 转换为10位二进制字符串
+      strMSG.append(oneMSG);
+      //      qDebug() << oneMSG;
     }
   }
-
-  // Your Code Here：将随机数数组编码为普通的未压缩二进制数组，用于在客户端编码
-  void ToBinaryCode() {}
 
   // Your Code
   // Here：将普通的未压缩二进制(字符串/数组)解码到十进制随机数数组，用于服务器端解码
@@ -69,6 +74,7 @@ class CreateRandNums {
   // Here：将随机数数组编码为haffman算法编码后的二进制数组，务必同步传输字典，用于在客户端编码
   void ToHaffmanCode() {}
 
+  // ----------------------------------
   // Your Code
   // Here：将haffman算法编码后的二进制(字符串/数组)解码到十进制随机数数组，用于服务器端解码
   void HaffmanCodeToIntArray() {}

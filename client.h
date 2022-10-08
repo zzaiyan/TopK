@@ -38,7 +38,7 @@ class Client : public QWidget {
   Ui::Client* ui;
   QTcpSocket* socket;
   QTimer* tim;
-  CreateRandNums* msgs = NULL;
+  CreateRandNums* msgs = nullptr;
 
   void send_data();
 };

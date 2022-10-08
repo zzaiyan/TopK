@@ -2,22 +2,23 @@
 #include <QDebug>
 #include <QList>
 #include <QNetworkInterface>
-//#include "createrandnums.h"
 #include "heap.h"
 #include "ui_server.h"
+
+#define PORT 52996
 
 Server::Server(QWidget* parent) : QWidget(parent), ui(new Ui::Server) {
   ui->setupUi(this);
   init();
-  //  msgs = new CreateRandNums();  //生成处理随机数的类对象
+  msgs = new CreateRandNums();  //生成处理随机数的类对象
 }
 
 //服务器端的析构函数
 Server::~Server() {
   delete ui;
-  //  if (msgs != NULL) {
-  //    delete msgs;
-  //  }
+  if (msgs) {
+    delete msgs;
+  }
 }
 void Server::init() {
   // 初始化哈希表
@@ -38,7 +39,7 @@ void Server::init() {
 }
 //检查是否被占用
 void Server::newListen() {
-  if (!TcpServer->listen(QHostAddress::Any, 52996)) {
+  if (!TcpServer->listen(QHostAddress::Any, PORT)) {
     qDebug() << TcpServer->errorString();
     close();
     return;
@@ -80,7 +81,7 @@ void Server::displayError(QAbstractSocket::SocketError) {
 / 出现次数最多的20个数
 */
 void Server::RcvData() {
-  QString rcvMsg = TcpSocket->readAll();
+  rcvMsg = TcpSocket->readAll();
   //    ui->textEdit_read->setText(rcvMsg);
   QString ip = TcpSocket->peerAddress().toString();
   quint16 port = TcpSocket->peerPort();
@@ -91,31 +92,35 @@ void Server::RcvData() {
     ui->textEdit_read->append(QString("[%1:%2]:closed.").arg(ip).arg(port));
     return;
   }
-
-  int len = rcvMsg.size() - 1, t = 0;
-  for (int i = 0; i < len; i++) {
-    if (rcvMsg[i].isDigit()) {
-      t = t * 10 + rcvMsg[i].toLatin1() - '0';
-    }
-    if (i + 1 == len || rcvMsg[i + 1].isSpace()) {
+  if (rcvMsg.front() == 'X') {
+    int len = rcvMsg.size() / 10;
+    auto str = rcvMsg.toLatin1().data();
+    for (int i = 0; i < len; i++) {
+      int t = (str[i * 10 + 1] - '0') * 1 + (str[i * 10 + 2] - '0') * 2 +
+              (str[i * 10 + 3] - '0') * 4 + (str[i * 10 + 4] - '0') * 8 +
+              (str[i * 10 + 5] - '0') * 16 + (str[i * 10 + 6] - '0') * 32 +
+              (str[i * 10 + 7] - '0') * 64 + (str[i * 10 + 8] - '0') * 128 +
+              (str[i * 10 + 9] - '0') * 256 + (str[i * 10 + 10] - '0') * 512;
       hash[t].cnt++;
-      t = 0;
     }
-  }
-  auto mhp = MaxHeap(HNode)(hash, 1000);
+    auto mhp = MaxHeap(HNode)(hash, 1000);
 
-  int k = 20;
-  QString outPut;
-  outPut.append(QString("\nNo.%0:\tTotal: %100000\n").arg(cnt).arg(cnt));
-  cnt++;
-  while (k--) {
-    auto top = mhp.pop();
-    outPut.append(QString("Top %1  is  %2\ttimes = %3\n")
-                      .arg(20 - k, 2)
-                      .arg(top.num, 3)
-                      .arg(top.cnt));
-  }
+    int k = 20;
+    QString outPut;
+    outPut.append(QString("\nNo.%0:\tTotal: %100000\n").arg(cnt).arg(cnt));
+    cnt++;
+    while (k--) {
+      auto top = mhp.pop();
+      outPut.append(QString("Top %1  is  %2\ttimes = %3\n")
+                        .arg(20 - k, 2)
+                        .arg(top.num, 3)
+                        .arg(top.cnt));
+    }
 
-  ui->textEdit_read->append(
-      QString("[%1:%2]:%3").arg(ip).arg(port).arg(outPut));
+    ui->textEdit_read->append(
+        QString("[%1:%2]:%3").arg(ip).arg(port).arg(outPut));
+  } else {
+    ui->textEdit_read->append(
+        QString("[%1:%2]:%3").arg(ip).arg(port).arg(rcvMsg));
+  }
 }

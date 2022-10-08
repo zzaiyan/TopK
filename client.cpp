@@ -13,7 +13,7 @@ Client::Client(QWidget* parent) : QWidget(parent), ui(new Ui::Client) {
 
   //设置定时器，每隔30s自动调用onTimeOut函数发送1万个随机数去服务器端
   tim = new QTimer();
-  tim->setInterval(1000 * 0.33);
+  tim->setInterval(1000 * 0.5);
   connect(tim, SIGNAL(timeout()), this, SLOT(onTimeOut()));
   msgs = new CreateRandNums();  //生成处理随机数的类对象
 
@@ -68,17 +68,17 @@ void Client::send_data() {
 
   QString txt = msgs->strMSG;
   socket->write(txt.toUtf8().data());
-  ui->textEdit_write->clear();
   ui->textEdit_read->append(
       QString("[local]: Text sent: size=%1").arg(txt.size()));
+  qDebug() << txt.size();
 }
 
 //发送数据
 void Client::on_pushButton_send_clicked() {
   QString txt = ui->textEdit_write->toPlainText();
   socket->write(txt.toUtf8().data());
-  qDebug() << txt.toUtf8().data();
-  qDebug() << txt.toUtf8().size();
+  qDebug() << txt.toUtf8().data() << "\tsize=" << txt.toUtf8().size();
+  ui->textEdit_read->append(QString("[localclient]:%1").arg(txt));
   ui->textEdit_write->clear();
 }
 

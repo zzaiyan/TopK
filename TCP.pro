@@ -37,4 +37,4 @@ HEADERS  += \
 FORMS    += \
     client.ui \
     server.ui
-CONFIG   += C++11
+CONFIG   += C++17

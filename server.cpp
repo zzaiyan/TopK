@@ -10,15 +10,15 @@
 Server::Server(QWidget* parent) : QWidget(parent), ui(new Ui::Server) {
   ui->setupUi(this);
   init();
-  msgs = new CreateRandNums();  //生成处理随机数的类对象
+  //  msgs = new CreateRandNums();  //生成处理随机数的类对象
 }
 
 //服务器端的析构函数
 Server::~Server() {
   delete ui;
-  if (msgs) {
-    delete msgs;
-  }
+  //  if (msgs) {
+  //    delete msgs;
+  //}
 }
 void Server::init() {
   // 初始化哈希表
@@ -92,9 +92,10 @@ void Server::RcvData() {
     ui->textEdit_read->append(QString("[%1:%2]:closed.").arg(ip).arg(port));
     return;
   }
-  if (rcvMsg.front() == 'X') {
+  if (rcvMsg.front() == 'X' || 1) {
     int len = rcvMsg.size() / 10;
     auto str = rcvMsg.toLatin1().data();
+    //    qDebug() << Qt::endl;
     for (int i = 0; i < len; i++) {
       int t = (str[i * 10 + 1] - '0') * 1 + (str[i * 10 + 2] - '0') * 2 +
               (str[i * 10 + 3] - '0') * 4 + (str[i * 10 + 4] - '0') * 8 +
@@ -102,6 +103,7 @@ void Server::RcvData() {
               (str[i * 10 + 7] - '0') * 64 + (str[i * 10 + 8] - '0') * 128 +
               (str[i * 10 + 9] - '0') * 256 + (str[i * 10 + 10] - '0') * 512;
       hash[t].cnt++;
+      //      qDebug() << t;
     }
     auto mhp = MaxHeap(HNode)(hash, 1000);
 

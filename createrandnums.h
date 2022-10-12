@@ -10,17 +10,12 @@
 #include <iostream>
 #include <vector>
 
-#define SUMNUM 10000  //随机数的数量
-#define MAXNUM 999    //随机数范围0---MAXNUM
+constexpr int SUMNUM = 20;    //随机数的数量
+constexpr int MAXNUM = 1000;  //随机数范围0---MAXNUM
+
+constexpr double INTERNAL = 10 * 0.5;
 
 //#pragma warning(disable : 4996)
-
-struct HNode {
-  int num, cnt;  // value and times
-  bool operator<(const HNode& a) const {
-    return cnt < a.cnt || (cnt == a.cnt && num < a.num);
-  }
-};
 
 using namespace std;
 using namespace chrono;
@@ -57,10 +52,10 @@ class CreateRandNums {
 
   //将随机数数组转换为字符串，同时转化为二进制
   void Transform() {
-    strMSG = "X";  // 标记
+    strMSG.clear();
     for (int i = 0; i < SUMNUM; i++) {
       QString oneMSG = QString("%1").arg(
-          intMSG[i], 10, 2, QLatin1Char('0'));  // 转换为10位二进制字符串
+          intMSG[i], 3, 10, QLatin1Char('0'));  // 转换为3位十进制字符串
       strMSG.append(oneMSG);
       //      qDebug() << oneMSG;
     }

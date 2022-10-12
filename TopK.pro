@@ -8,7 +8,7 @@ QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = TCP
+TARGET = TopK
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -30,6 +30,7 @@ SOURCES += main.cpp\
 HEADERS  += \
     client.h \
     heap.h \
+    huffman.h \
     server.h \
     createrandnums.h \
     vector.h

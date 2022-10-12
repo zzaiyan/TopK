@@ -4,18 +4,18 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QWidget>
-#include "createrandnums.h"
+//#include "createrandnums.h"
 
 namespace Ui {
 class Server;
 }
 
-// struct HNode {
-//   long long num, cnt;  // value and times
-//   bool operator<(const HNode& a) const {
-//     return cnt < a.cnt || (cnt == a.cnt && num < a.num);
-//   }
-// };
+struct HNode {
+  int num, cnt;  // value and times
+  bool operator<(const HNode& a) const {
+    return cnt < a.cnt || (cnt == a.cnt && num < a.num);
+  }
+};
 
 class Server : public QWidget {
   Q_OBJECT
@@ -43,7 +43,7 @@ class Server : public QWidget {
   Ui::Server* ui;
   QTcpServer* TcpServer;
   QTcpSocket* TcpSocket;
-  CreateRandNums* msgs = nullptr;
+  //  CreateRandNums* msgs = nullptr;
 
  public:
   int cnt;

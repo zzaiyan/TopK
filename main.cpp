@@ -1,7 +1,9 @@
 #include <QApplication>
 #include <QScreen>
 #include "client.h"
+#include "huffman.h"
 #include "server.h"
+
 int main(int argc, char* argv[]) {
   QApplication a(argc, argv);
   Server s;
@@ -16,5 +18,11 @@ int main(int argc, char* argv[]) {
     c.move(pos_X, pos_Y);
     s.move(pos_X + c.width() + 20, pos_Y);
   } while (0);
+  //  HuffmanTree huf;
+  //  QString str("52771234567890");
+
+  //  huf.importStr(str);
+  //  qDebug() << huf.getMat();
+  //  huf.decoding("1000110000");
   return a.exec();
 }

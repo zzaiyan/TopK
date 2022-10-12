@@ -4,6 +4,7 @@
 #include <QTimer>
 #include "createrandnums.h"
 #include "ui_client.h"
+
 Client::Client(QWidget* parent) : QWidget(parent), ui(new Ui::Client) {
   ui->setupUi(this);
   socket = new QTcpSocket(this);
@@ -13,9 +14,10 @@ Client::Client(QWidget* parent) : QWidget(parent), ui(new Ui::Client) {
 
   //设置定时器，每隔30s自动调用onTimeOut函数发送1万个随机数去服务器端
   tim = new QTimer();
-  tim->setInterval(1000 * 0.5);
+  tim->setInterval(1000 * INTERNAL);
   connect(tim, SIGNAL(timeout()), this, SLOT(onTimeOut()));
   msgs = new CreateRandNums();  //生成处理随机数的类对象
+  huf = new HuffmanTree;
 
   ui->pushButton_connect->setEnabled(1);
   ui->pushButton_send->setEnabled(0);
@@ -66,11 +68,21 @@ void Client::send_data() {
   // msgs->TransformBinaryCode();
   // 二进制数组转为类中的变量strMSG(字符串)以便进行数据传输
 
-  QString txt = msgs->strMSG;
-  socket->write(txt.toUtf8().data());
+  QString txt = msgs->strMSG, sendBuf;
+  huf->importStr(txt);  // 导入字符串
+  qDebug() << "txt = " << txt;
+  huf->calcDict();  //计算字典
+  for (int i = 0; i < txt.size(); i++) {
+    sendBuf.append(huf->Dict[txt[i].toLatin1() - '0']);
+  }
+  qDebug() << "sendBuf = " << sendBuf;
+  QString mat = huf->getMat();
+  qDebug() << "mat = " << mat;
+  //  socket->write(txt.toUtf8().data());
   ui->textEdit_read->append(
       QString("[local]: Text sent: size=%1").arg(txt.size()));
-  qDebug() << txt.size();
+  qDebug() << "send size = " << txt.size();
+  huf->importMat(mat);
 }
 
 //发送数据

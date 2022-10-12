@@ -4,6 +4,8 @@
 #include <QTcpSocket>
 #include <QWidget>
 #include "createrandnums.h"
+#include "huffman.h"
+
 namespace Ui {
 class Client;
 }
@@ -38,6 +40,7 @@ class Client : public QWidget {
   Ui::Client* ui;
   QTcpSocket* socket;
   QTimer* tim;
+  HuffmanTree* huf;
   CreateRandNums* msgs = nullptr;
 
   void send_data();

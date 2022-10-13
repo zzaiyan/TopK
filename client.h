@@ -40,7 +40,7 @@ class Client : public QWidget {
   Ui::Client* ui;
   QTcpSocket* socket;
   QTimer* tim;
-  HuffmanTree* huf;
+  //  HuffmanTree* huf;
   CreateRandNums* msgs = nullptr;
 
   void send_data();

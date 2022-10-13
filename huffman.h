@@ -43,11 +43,13 @@ class HuffmanTree {
 
  public:
   QString Dict[MAXLEAF];
+  QString txtBuf, sendBuf;
 
-  HuffmanTree() { cout << sizeof(HuffNode) << endl; }
+  HuffmanTree() { init(); }
 
-  void importStr(const QString& str) {
+  void importStr(const QString& str) {  // 通过字符串建立哈夫曼树
     init();
+    txtBuf = str;
     int i, j, m1, m2, x1, x2;
     // 首先统计数字出现的次数
     int charCnt[10]{0};
@@ -80,9 +82,10 @@ class HuffmanTree {
       HuffNode[n + i].lChild = x1;
       HuffNode[n + i].rChild = x2;
     }
+    calcDict();  // 计算字典
   }
 
-  void calcDict() {
+  void calcDict() {  //计算字典
     string ret;
     HCodeType cd;
     int i, j, c, p;
@@ -119,7 +122,16 @@ class HuffmanTree {
     //    }
   }
 
-  QString getMat() {
+  QString getSendBuf() {
+    sendBuf.clear();
+    for (auto ch : txtBuf) {
+      sendBuf.append(Dict[ch.toLatin1() - '0']);
+    }
+    //    qDebug() << "sendBuf = " << sendBuf;
+    return sendBuf;
+  }
+
+  QString getMat() {  // 返回矩阵字符串，用于接收端解码
     QString ret;
     for (int i = 0; i < MAXNODE; i++) {
       QString buf;
@@ -152,29 +164,44 @@ class HuffmanTree {
       //                   .arg(HuffNode[i].value);
       ret.append(buf);
     }
-    qDebug() << "Mat.size = " << ret.size();
+    //    qDebug() << "Mat.size = " << ret.size();
     return ret;
   }
 
-  void importMat(const QString& mat) {
+  void importMat(const QString& mat) {  // 导入收到的矩阵字符串，用于解码
+                                        //    qDebug() << "importMat ing!";
     for (int i = 0; i < MAXNODE; i++) {
-      QString temp;
-      temp = mat.mid(0, 5);
+      int s = i * 12;
+      QStringRef temp;
+      temp = mat.midRef(s + 0, 5);  // 0-4
       HuffNode[i].weight = temp.toInt();
-      temp = mat.mid(2, 2);
+      temp = mat.midRef(s + 5, 2);  // 5-6
       if (temp != "99")
         HuffNode[i].parent = temp.toInt();
       else
         HuffNode[i].parent = -1;
-      qDebug() << "temp = " << temp;
+      temp = mat.midRef(s + 7, 2);  // 7-8
+      if (temp != "99")
+        HuffNode[i].lChild = temp.toInt();
+      else
+        HuffNode[i].lChild = -1;
+      temp = mat.midRef(s + 9, 2);  // 9-10
+      if (temp != "99")
+        HuffNode[i].rChild = temp.toInt();
+      else
+        HuffNode[i].rChild = -1;
+
+      HuffNode[i].value = mat[s + 11].toLatin1();
+
+      //      qDebug() << "temp = " << temp;
     }
   }
 
-  QString decoding(const QString& str) {
+  QString decoding(const QString& str) {  // 将输入的二进制字符串解码，返回结果
     QString ret;
     int i, tmp = 0;
     char num[16384];
-    for (i = 0; i < (int)str.size(); i++) {
+    for (i = 0; i < str.size(); i++) {
       if (str[i] == '0')
         num[i] = 0;
       else
@@ -193,7 +220,7 @@ class HuffmanTree {
       //      printf("%c", HuffNode[tmp].value);
       ret.push_back(QString(HuffNode[tmp].value));
     }
-    qDebug() << ret;
+    //    qDebug() << ret;
     return ret;
   }
 };

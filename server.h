@@ -5,6 +5,7 @@
 #include <QTcpSocket>
 #include <QWidget>
 //#include "createrandnums.h"
+#include "huffman.h"
 
 namespace Ui {
 class Server;
@@ -43,6 +44,7 @@ class Server : public QWidget {
   Ui::Server* ui;
   QTcpServer* TcpServer;
   QTcpSocket* TcpSocket;
+  HuffmanTree* huf;
   //  CreateRandNums* msgs = nullptr;
 
  public:

@@ -33,6 +33,8 @@ class Client : public QWidget {
 
   void on_pushButton_start_clicked();
 
+  void on_comboBox_currentIndexChanged(int index);
+
  public slots:
   void onTimeOut();
 
@@ -42,6 +44,8 @@ class Client : public QWidget {
   QTimer* tim;
   //  HuffmanTree* huf;
   CreateRandNums* msgs = nullptr;
+
+  int codingMode = 0;
 
   void send_data();
 };

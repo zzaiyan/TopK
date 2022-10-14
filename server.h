@@ -40,12 +40,17 @@ class Server : public QWidget {
 
   void displayError(QAbstractSocket::SocketError);
 
+  void on_comboBox_activated(int index);
+
  private:
   Ui::Server* ui;
   QTcpServer* TcpServer;
   QTcpSocket* TcpSocket;
   HuffmanTree* huf;
   //  CreateRandNums* msgs = nullptr;
+  int topkFrom = 0;
+
+  //  void getTopK();
 
  public:
   int cnt;

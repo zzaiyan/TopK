@@ -8,15 +8,19 @@
 #define hp Heap<T, _Cp>
 #define vec Vector<T>
 
-#define _data vec::_data
-#define _size vec::_size
-#define _capacity vec::_capacity
+//#define _data vec::_data
+//#define _size vec::_size
+//#define _capacity vec::_capacity
 
 #define MinHeap(T) Heap<T, std::greater<T>>
 #define MaxHeap(T) Heap<T, std::less<T>>
 
 template <typename T, typename _Cp = std::greater<T>>
 class Heap : public Vector<T> {
+  using vec::_capacity;
+  using vec::_data;
+  using vec::_size;
+
  protected:
   // T* _data;
   // int _size, _capacity;

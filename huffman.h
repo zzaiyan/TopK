@@ -29,7 +29,7 @@ class HuffmanTree {
   HNodeType HuffNode[MAXNODE];
   HCodeType HuffCode[MAXLEAF];
 
-  int n = 10;  // 字典长度
+  int n = 10;  // 字典大小
 
   void init() {
     for (int i = 0; i < MAXNODE; i++) {

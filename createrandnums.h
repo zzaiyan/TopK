@@ -55,33 +55,43 @@ class CreateRandNums {
     //      intMSG[i] = 123;
   }
 
-  //将随机数数组转换为字符串，同时转化为二进制
-  void TransToHuffman() {
+  void TransToStr() {
     strMSG.clear();
     for (int i = 0; i < SUMNUM; i++) {
       QString oneMSG = QString("%1").arg(
           intMSG[i], 3, 10, QLatin1Char('0'));  // 转换为3位十进制字符串
       strMSG.append(oneMSG);
-      //            qDebug() << oneMSG;
     }
+  }
+
+  //将随机数数组转换为字符串，同时转化为二进制
+  void TransToHuffman() {
+    TransToStr();
+
     int rawLen = strMSG.length();
+
     //    qDebug() << "rawTxt = " << strMSG;
+
     huf->importStr(strMSG);      // 建立哈夫曼树
     strMSG = huf->getSendBuf();  // 获取哈夫曼编码
     hufMat = huf->getMat();      // 获取哈夫曼矩阵
-    qDebug() << QString("定长编码长度 = %1 , 哈夫曼编码长度 = %2")
-                    .arg(rawLen * 8)
-                    .arg(strMSG.length());
+
+    //    qDebug() << "hufTxt = " << strMSG;
+
+    //    qDebug() << QString("定长编码长度 = %1 , 哈夫曼编码长度 = %2")
+    //                    .arg(rawLen * 8)
+    //                    .arg(strMSG.length());
   }
 
   void TransToBinary() {
-    strMSG.clear();
-    for (int i = 0; i < SUMNUM; i++) {
-      QString oneMSG = QString("%1").arg(
-          intMSG[i], 24, 2, QLatin1Char('0'));  // 转换为24位二进制字符串
-      strMSG.append(oneMSG);
-      //            qDebug() << oneMSG;
+    TransToStr();
+    //    qDebug() << "strTxt = " << strMSG;
+    QString tmp;
+    for (auto ch : strMSG) {  // 用8位二进制表示每个字符
+      tmp.append(QString("%1").arg(ch.toLatin1(), 8, 2, QLatin1Char('0')));
     }
+    strMSG = tmp;
+    //    qDebug() << "binTxt = " << tmp;
   }
 };
 

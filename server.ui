@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>480</width>
+    <width>499</width>
     <height>600</height>
    </rect>
   </property>
@@ -27,12 +27,22 @@
       <widget class="QComboBox" name="comboBox">
        <item>
         <property name="text">
-         <string>Heap</string>
+         <string>最大堆</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Sort</string>
+         <string>红黑树</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>快速排序</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>朴素循环</string>
         </property>
        </item>
       </widget>
@@ -148,6 +158,32 @@
      </property>
      <property name="acceptRichText">
       <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QLabel" name="timeLabel">
+     <property name="minimumSize">
+      <size>
+       <width>150</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>统计耗时：0.0000 ms </string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLabel" name="cntLabel">
+     <property name="text">
+      <string>比较次数：0000 次</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
    </item>

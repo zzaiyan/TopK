@@ -7,6 +7,8 @@
 
 #define PORT 52996
 
+int cmpTimes;
+
 Server::Server(QWidget* parent) : QWidget(parent), ui(new Ui::Server) {
   ui->setupUi(this);
   init();
@@ -24,7 +26,7 @@ Server::~Server() {
 
 void Server::init() {
   // 初始化哈希表
-  cnt = 0;
+  cnt = 0, total = 0;
   hash = new HNode[1000];
   huf = new HuffmanTree;
   for (int i = 0; i < 1000; i++) {
@@ -93,7 +95,7 @@ void Server::RcvData() {
     ui->textEdit_read->append(QString("[%1:%2]:closed.").arg(ip).arg(port));
     return;
   }
-
+  auto start = chrono::high_resolution_clock::now();  // 统计时间
   // 处理收到的数据包
   if (rcvMsg.front() == 'B') {  // 普通二进制包
     ui->lineEdit->setText("Receiving Normal Binary Data.");
@@ -110,6 +112,7 @@ void Server::RcvData() {
              (str[i * 8 + 2] - '0') * 64 + (str[i * 8 + 1] - '0') * 128 - '0';
       }
       //      qDebug() << "t = " << t;
+      total++;
       hash[t].cnt++;
     }
   } else if (rcvMsg.front() == 'M') {  // 普通文本信息
@@ -135,17 +138,21 @@ void Server::RcvData() {
     for (int i = 0; i < len; i += 3) {
       int t =
           (str[i] - '0') * 100 + (str[i + 1] - '0') * 10 + (str[i + 2] - '0');
+      total++;
       hash[t].cnt++;
     }
   }
 
   // 统计出现次数前20的元素
+  cmpTimes = 0;  //次数置零
+
   QString outPut;  // 结果输出字符串
   cnt++;           // 记录当前是第几波数据
-  outPut.append(QString("\nNo.%1:\tTotal: %20000\n").arg(cnt).arg(cnt));
-  // 算法二选一
+  outPut.append(QString("\nNo.%1:\tTotal: %2\n").arg(cnt).arg(total));
+  // 算法四选一
   if (topkFrom == 0) {                      // 建堆，统计Top20
-    auto mhp = MaxHeap(HNode)(hash, 1000);  // new 一个最大堆
+    auto mhp = MaxHeap(HNode)(hash, 1000);  // 声明一个最大堆
+    //    Heap<HNode, HNode> mhp(hash, 1000);
 
     for (int k = 0; k < 20; k++) {  // 依次从堆顶取出20个元素
       auto top = mhp.pop();
@@ -154,16 +161,54 @@ void Server::RcvData() {
                         .arg(top.num, 3)
                         .arg(top.cnt));
     }
-  } else {                    // 通过排序统计前20
-    sort(hash, hash + 1000);  // 调用 STL 排序算法
+  } else if (topkFrom == 1) {  // 红黑树统计
+    // RB-Tree
+    auto rbtree = set<HNode>();
+    auto p = rbtree.begin();
+    for (int i = 0; i < 1000; i++) {
+      rbtree.insert(hash[i]);
+      p++;
+    }
+    p--;
+    for (int k = 0; k < 20; k++, p--) {
+      outPut.append(QString("Top %1  is  %2\ttimes = %3\n")
+                        .arg(k + 1, 2)
+                        .arg((*p).num, 3)
+                        .arg((*p).cnt));
+    }
+
+  } else if (topkFrom == 2) {  // 快速排序统计Top20
+    Vector<HNode> vec(hash, 1000);
+    sort(vec.begin(), vec.end());  // 调用 STL 排序算法
 
     for (int k = 0; k < 20; k++) {
       outPut.append(QString("Top %1  is  %2\ttimes = %3\n")
                         .arg(k + 1, 2)
-                        .arg(hash[999 - k].num, 3)
-                        .arg(hash[999 - k].cnt));
+                        .arg(vec[999 - k].num, 3)
+                        .arg(vec[999 - k].cnt));
+    }
+  } else {
+    Vector<HNode> vec(hash, 1000);
+    for (int i = 0; i < 20; i++) {
+      int maxJ = i;
+      for (int j = i; j < 1000; j++) {  //寻找第 i+1 大的元素
+        if ((vec[maxJ] < vec[j]))
+          maxJ = j;
+      }
+      swap(vec[i], vec[maxJ]);
+    }
+    for (int k = 0; k < 20; k++) {
+      outPut.append(QString("Top %1  is  %2\ttimes = %3\n")
+                        .arg(k + 1, 2)
+                        .arg(vec[k].num, 3)
+                        .arg(vec[k].cnt));
     }
   }
+  auto end = chrono::high_resolution_clock::now();  // 统计时间
+  auto runTime = (end - start).count();
+  //  qDebug() << cmpTimes;
+  ui->cntLabel->setText(QString("比较次数：%1 次.").arg(cmpTimes));
+  ui->timeLabel->setText(QString("统计耗时：%1 ms.").arg(runTime / 1000000.0));
   ui->textEdit_read->append(
       QString("[%1:%2]: %3").arg(ip).arg(port).arg(outPut));
 }

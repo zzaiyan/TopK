@@ -11,7 +11,7 @@
 #include <vector>
 #include "huffman.h"
 
-constexpr int SUMNUM = 1000;  //随机数的数量
+constexpr int SUMNUM = 2500;  //随机数的数量
 constexpr int MAXNUM = 999;   //随机数范围0---MAXNUM
 
 constexpr double INTERNAL = 0.5;
@@ -68,7 +68,7 @@ class CreateRandNums {
   void TransToHuffman() {
     TransToStr();
 
-    int rawLen = strMSG.length();
+    //    int rawLen = strMSG.length();
 
     //    qDebug() << "rawTxt = " << strMSG;
 

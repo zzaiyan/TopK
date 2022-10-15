@@ -200,7 +200,8 @@ class HuffmanTree {
   QString decoding(const QString& str) {  // 将输入的二进制字符串解码，返回结果
     QString ret;
     int i, tmp = 0;
-    char num[16384];
+    //    char num[16384];
+    char* num = new char[str.size() + 10];
     for (i = 0; i < str.size(); i++) {
       if (str[i] == '0')
         num[i] = 0;
@@ -221,6 +222,7 @@ class HuffmanTree {
       ret.push_back(QString(HuffNode[tmp].value));
     }
     //    qDebug() << ret;
+    delete[] num;
     return ret;
   }
 };

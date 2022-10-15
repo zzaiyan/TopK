@@ -1,5 +1,5 @@
-﻿#ifndef WIDGET_H
-#define WIDGET_H
+﻿#ifndef SERVER_H
+#define SERVER_H
 
 #include <QTcpServer>
 #include <QTcpSocket>
@@ -11,15 +11,20 @@ namespace Ui {
 class Server;
 }
 
+extern int cmpTimes;
+
 struct HNode {
   int num, cnt;  // value and times
+
   bool operator<(const HNode& a) const {
+    cmpTimes++;
     return cnt < a.cnt || (cnt == a.cnt && num < a.num);
   }
 };
 
 class Server : public QWidget {
   Q_OBJECT
+  HNode node;
 
  public:
   explicit Server(QWidget* parent = 0);
@@ -53,9 +58,9 @@ class Server : public QWidget {
   //  void getTopK();
 
  public:
-  int cnt;
+  int cnt, total;
   HNode* hash;
   QString rcvMsg;
 };
 
-#endif  // WIDGET_H
+#endif  // SERVER_H

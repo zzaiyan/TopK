@@ -85,24 +85,43 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="1" colspan="2">
-    <widget class="QComboBox" name="comboBox">
+   <item row="2" column="0" colspan="4">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <property name="text">
-       <string>哈夫曼编码</string>
-      </property>
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Messeges Box</string>
+       </property>
+      </widget>
      </item>
      <item>
-      <property name="text">
-       <string>8位等长编码</string>
-      </property>
+      <widget class="QLabel" name="label_5">
+       <property name="minimumSize">
+        <size>
+         <width>240</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>发送数量 2500 个，发送间隔 0.5 s.</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
      </item>
-    </widget>
+    </layout>
    </item>
-   <item row="2" column="0" colspan="2">
-    <widget class="QLabel" name="label_3">
-     <property name="text">
-      <string>Messeges Box</string>
+   <item row="3" column="0" colspan="4">
+    <widget class="QTextEdit" name="textEdit_read">
+     <property name="undoRedoEnabled">
+      <bool>false</bool>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="acceptRichText">
+      <bool>false</bool>
      </property>
     </widget>
    </item>
@@ -167,17 +186,18 @@
      </item>
     </layout>
    </item>
-   <item row="3" column="0" colspan="4">
-    <widget class="QTextEdit" name="textEdit_read">
-     <property name="undoRedoEnabled">
-      <bool>false</bool>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="acceptRichText">
-      <bool>false</bool>
-     </property>
+   <item row="1" column="1" colspan="2">
+    <widget class="QComboBox" name="comboBox">
+     <item>
+      <property name="text">
+       <string>哈夫曼编码</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>8位等长编码</string>
+      </property>
+     </item>
     </widget>
    </item>
   </layout>

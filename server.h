@@ -45,7 +45,7 @@ class Server : public QWidget {
 
   void displayError(QAbstractSocket::SocketError);
 
-  void on_comboBox_activated(int index);
+  void on_comboBox_currentIndexChanged(int index);
 
  private:
   Ui::Server* ui;

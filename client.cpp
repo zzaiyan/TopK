@@ -18,7 +18,8 @@ Client::Client(QWidget* parent) : QWidget(parent), ui(new Ui::Client) {
   connect(tim, SIGNAL(timeout()), this, SLOT(onTimeOut()));
   msgs = new CreateRandNums();  //生成处理随机数的类对象
                                 //  huf = new HuffmanTree;
-
+  ui->label_5->setText(
+      QString("发送数量 %1 个，发送间隔 %2 s.").arg(SUMNUM).arg(INTERNAL));
   ui->pushButton_connect->setEnabled(1);
   ui->pushButton_send->setEnabled(0);
 }

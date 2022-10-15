@@ -11,10 +11,10 @@
 #include <vector>
 #include "huffman.h"
 
-constexpr int SUMNUM = 2500;  //随机数的数量
+constexpr int SUMNUM = 5000;  //随机数的数量
 constexpr int MAXNUM = 999;   //随机数范围0---MAXNUM
 
-constexpr double INTERNAL = 0.4;
+constexpr double INTERNAL = 0.5;
 
 //#pragma warning(disable : 4996)
 
@@ -27,8 +27,6 @@ class CreateRandNums {
   QString strMSG;
   QString hufMat;
   HuffmanTree* huf;
-  //  //存储二进制编码的数组，数字用2进制存储，每个数字占10个字节
-  //  char binaryCode[SUMNUM][10];
 
   CreateRandNums() {
     randseed = -1;
@@ -40,19 +38,17 @@ class CreateRandNums {
   ~CreateRandNums() {
     delete[] intMSG;
     delete huf;
-    //    cout << "CreateRandNums deleted" << endl;
   }
 
   void AddRandNums() {
     randseed++;
     srand(randseed);
-    //        delete intMSG;
     for (int i = 0; i < SUMNUM; i++) {
       intMSG[i] =
           (rand() * RAND_MAX % MAXNUM + rand()) % MAXNUM + 0;  // 0~MAXNUM
     }
-    //    for (int i = 0; i < 950; i++)
-    //      intMSG[i] = 123;
+    for (int i = 0; i < 10; i++)
+      intMSG[i] = 77;
   }
 
   void TransToStr() {

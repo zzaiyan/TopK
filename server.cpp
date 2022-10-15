@@ -54,7 +54,8 @@ void Server::newListen() {
 void Server::on_pushButton_send_clicked() {
   QString str = ui->textEdit_write->toPlainText();
   TcpSocket->write(str.toUtf8().data());
-  ui->textEdit_read->append(QString("[localhost]:%1").arg(str));
+  ui->textEdit_read->append(QString("[localhost]: %1").arg(str));
+  ui->lineEdit->setText("发送普通文本信息……");
   ui->textEdit_write->clear();
 }
 //断开连接
@@ -79,12 +80,6 @@ void Server::displayError(QAbstractSocket::SocketError) {
   TcpSocket->close();
 }
 
-/*
-接收数据，请修改该函数以便实现利用类对象msgs对传输的二进制字符串解码，
-请调用msgs->BinaryCodeToIntArray()或者msgs->HaffmanCodeToIntArray()，
-将二进制字符串解码到msgs->intMSG整形数组中，并基于最大堆或者其他算法动态寻找最大的20个数
-/ 出现次数最多的20个数
-*/
 void Server::RcvData() {
   rcvMsg = TcpSocket->readAll();
   //    ui->textEdit_read->setText(rcvMsg);
@@ -211,11 +206,11 @@ void Server::RcvData() {
   auto runTime = (end - start).count();
   //  qDebug() << cmpTimes;
   ui->cntLabel->setText(QString("比较次数：%1 次.").arg(cmpTimes));
-  ui->timeLabel->setText(QString("耗时：%1 ms.").arg(runTime / 1000000.0));
+  ui->timeLabel->setText(QString("耗时：%1 ms.").arg(runTime / 1e6));
   ui->textEdit_read->append(
       QString("[%1:%2]: %3").arg(ip).arg(port).arg(outPut));
 }
 
-void Server::on_comboBox_activated(int index) {
+void Server::on_comboBox_currentIndexChanged(int index) {
   topkFrom = index;
 }

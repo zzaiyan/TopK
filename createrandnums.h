@@ -14,7 +14,7 @@
 constexpr int SUMNUM = 2500;  //随机数的数量
 constexpr int MAXNUM = 999;   //随机数范围0---MAXNUM
 
-constexpr double INTERNAL = 0.5;
+constexpr double INTERNAL = 0.4;
 
 //#pragma warning(disable : 4996)
 

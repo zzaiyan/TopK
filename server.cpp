@@ -98,35 +98,38 @@ void Server::RcvData() {
   auto start = chrono::high_resolution_clock::now();  // 统计时间
   // 处理收到的数据包
   if (rcvMsg.front() == 'B') {  // 普通二进制包
-    ui->lineEdit->setText("Receiving Normal Binary Data.");
+    ui->lineEdit->setText("接收定长编码……");
     int len = rcvMsg.size() / 8;
-    auto str = rcvMsg.toLatin1().data();
     //    qDebug() << Qt::endl;
     for (int i = 0; i < len;) {
       int t = 0;
       for (int j = 0; j < 3; i++, j++) {
         t *= 10;
-        t += (str[i * 8 + 8] - '0') * 1 + (str[i * 8 + 7] - '0') * 2 +
-             (str[i * 8 + 6] - '0') * 4 + (str[i * 8 + 5] - '0') * 8 +
-             (str[i * 8 + 4] - '0') * 16 + (str[i * 8 + 3] - '0') * 32 +
-             (str[i * 8 + 2] - '0') * 64 + (str[i * 8 + 1] - '0') * 128 - '0';
+        t += (rcvMsg[i * 8 + 8].toLatin1() - '0') * 1 +
+             (rcvMsg[i * 8 + 7].toLatin1() - '0') * 2 +
+             (rcvMsg[i * 8 + 6].toLatin1() - '0') * 4 +
+             (rcvMsg[i * 8 + 5].toLatin1() - '0') * 8 +
+             (rcvMsg[i * 8 + 4].toLatin1() - '0') * 16 +
+             (rcvMsg[i * 8 + 3].toLatin1() - '0') * 32 +
+             (rcvMsg[i * 8 + 2].toLatin1() - '0') * 64 +
+             (rcvMsg[i * 8 + 1].toLatin1() - '0') * 128 - '0';
       }
       //      qDebug() << "t = " << t;
       total++;
       hash[t].cnt++;
     }
   } else if (rcvMsg.front() == 'M') {  // 普通文本信息
-    ui->lineEdit->setText("Receiving Text Message.");
+    ui->lineEdit->setText("接收普通文本信息……");
     ui->textEdit_read->append(
-        QString("[%1:%2]:%3").arg(ip).arg(port).arg(rcvMsg.remove(0, 1)));
+        QString("[%1:%2]: %3").arg(ip).arg(port).arg(rcvMsg.remove(0, 1)));
     return;
 
   } else if (rcvMsg.front() == 'H') {  // 哈夫曼数据包
-    ui->lineEdit->setText("Receiving Huffman Data.");
+    ui->lineEdit->setText("接收哈夫曼编码……");
     auto mat = rcvMsg.mid(1, 228);
     huf->importMat(mat);
     ui->textEdit_read->append(
-        QString("[%1:%2]:%3").arg(ip).arg(port).arg("Matrix get."));
+        QString("[%1:%2]: %3").arg(ip).arg(port).arg("字典已接收。"));
 
     auto hufTxt = rcvMsg.right(rcvMsg.length() - 229);
     //    qDebug() << "hufTxt = " << hufTxt;
@@ -208,7 +211,7 @@ void Server::RcvData() {
   auto runTime = (end - start).count();
   //  qDebug() << cmpTimes;
   ui->cntLabel->setText(QString("比较次数：%1 次.").arg(cmpTimes));
-  ui->timeLabel->setText(QString("统计耗时：%1 ms.").arg(runTime / 1000000.0));
+  ui->timeLabel->setText(QString("耗时：%1 ms.").arg(runTime / 1000000.0));
   ui->textEdit_read->append(
       QString("[%1:%2]: %3").arg(ip).arg(port).arg(outPut));
 }

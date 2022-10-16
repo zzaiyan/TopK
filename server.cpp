@@ -34,6 +34,8 @@ void Server::init() {
     hash[i].cnt = 0;
   }
 
+  //  rcvMsg.reserve(120005);
+
   TcpServer = new QTcpServer(this);
   TcpSocket = new QTcpSocket(this);
   newListen();
@@ -82,7 +84,7 @@ void Server::displayError(QAbstractSocket::SocketError) {
 
 void Server::RcvData() {
   rcvMsg = TcpSocket->readAll();
-  //    ui->textEdit_read->setText(rcvMsg);
+  //  qDebug() << rcvMsg.size();
   QString ip = TcpSocket->peerAddress().toString();
   quint16 port = TcpSocket->peerPort();
 
@@ -94,7 +96,7 @@ void Server::RcvData() {
   // 处理收到的数据包
   if (rcvMsg.front() == 'B') {  // 普通二进制包
     ui->lineEdit->setText("接收定长编码……");
-    int len = rcvMsg.size() / 8;
+    int len = rcvMsg.length() / 8;
     //    qDebug() << Qt::endl;
     for (int i = 0; i < len;) {
       int t = 0;

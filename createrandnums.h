@@ -29,7 +29,7 @@ class CreateRandNums {
   HuffmanTree* huf;
 
   CreateRandNums() {
-    randseed = -1;
+    randseed = 0;
     intMSG = new int[SUMNUM];
     huf = new HuffmanTree;
   }

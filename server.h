@@ -58,7 +58,7 @@ class Server : public QWidget {
   //  void getTopK();
 
  public:
-  int cnt, total;
+  unsigned long long cnt, total;
   HNode* hash;
   QString rcvMsg;
 };
